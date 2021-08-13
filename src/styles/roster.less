@@ -1,0 +1,247 @@
+// 操作子组件样式
+@media screen and (max-width: 993px) {
+  .roster_header {
+    width: 100%!important;
+    left: 20px!important;
+  }
+  .roster_container{
+      width: 100%!important;
+  }
+}
+
+
+@color: gray;
+// @color: red;
+@areaWidth: 200px;
+@userWidth: 180px;
+@userHeight: 30px;
+// @butWidth: 75px;
+@btnLeft: 60px;
+*,
+:after,
+:before {
+  -webkit-box-sizing: content-box !important;
+  box-sizing: content-box !important;
+}
+ul,
+li,
+div,
+p {
+  padding: 0;
+  margin: 0;
+}
+*,
+:after,
+:before {
+  box-sizing: border-box !important;
+}
+ul,
+li {
+  list-style: none;
+}
+.roster_container {
+  background: #fff;
+  position: fixed;
+  top: 110px;
+  bottom: 0;
+  width: calc(100% - 240px);
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  //   overflow: scroll;
+}
+.roster_content .area:last-child {
+  border-bottom: 1px solid @color;
+}
+
+.main_top {
+  flex: 0 0 auto;
+  display: flex;
+}
+.main_top div {
+  flex: 0 0 auto;
+  width: @userWidth;
+  line-height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid @color;
+  border-bottom: 0px solid @color;
+  border-right: 0px;
+}
+.main_top div:last-child {
+  border-right: 1px solid @color;
+}
+.main_top div:first-child {
+  border-right: 1px solid @color;
+}
+.main_top div:nth-child(2) {
+  border-left: 0px;
+  width: 179px;
+}
+.fixed_w {
+  box-sizing: border-box !important;
+  width: 200px !important;
+  position: sticky;
+  left: 60px;
+
+  z-index: 30;
+  background-color: #fff;
+  margin-left: 60px;
+}
+.main_top div > p:not(:nth-child(1)) {
+  border-top: 1px solid @color;
+}
+
+.main_top div > p {
+  line-height: 30px;
+}
+.roster_main {
+  padding-left: 20px;
+  flex: 1;
+  padding-top: 65px;
+  padding-bottom: 40px;
+  overflow: scroll;
+}
+.roster_place {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  bottom: 16px;
+  z-index: 20;
+  width: 120px;
+}
+.content_row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.row_left {
+  width: @btnLeft;
+  height: 30px;
+  position: sticky;
+  left: 10px;
+  margin-right: 20px;
+  //   right: -@btnLeft;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 20;
+}
+.row_left p {
+  width: 18px;
+  height: 18px;
+  background: #409eff;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+}
+p.row_del {
+  background: #f56c6c;
+}
+.content_row li {
+  width: 180px;
+  text-align: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+  font-size: 14px;
+  border-right: 1px solid #000;
+  //   border-top: 1px solid @color;
+}
+.lastUl li {
+  border-top: 1px solid !important;
+}
+.content_row li div {
+  position: relative;
+  height: 30px;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid;
+}
+// .content_row li div:not(:first-child) {
+//     border-top: 0px solid #000;
+// }
+li.row_Select {
+  width: @areaWidth;
+  border: 1px solid #000;
+  border-right: 1px solid #000;
+  border-top: 0px solid #000;
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-around;
+  position: sticky;
+  margin-left: 22px;
+  left: 60px;
+  z-index: 30;
+  background-color: #fff;
+}
+
+.content_row li button {
+  border: none;
+  outline: none;
+  height: 100%;
+  width: 50%;
+  padding: 0 2px;
+  box-sizing: border-box !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content_row li button:last-child {
+  border-left: 1px solid red;
+}
+.row_Select input {
+  padding: 0 !important;
+  text-align: center !important;
+}
+.roster_footer {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  flex: 0 0 auto;
+  z-index: 33;
+  display: flex;
+  justify-content: center;
+}
+.roster_header {
+  position: fixed;
+  right: 20px;
+  //   left: 50%;
+    // top: 128px;
+  padding: 15px 0;
+  //   transform: translateX(-50%);
+  flex: 0 0 auto;
+  display: flex;
+  //   justify-content: space-around;
+  align-items: center;
+  white-space: nowrap;
+  width: calc(100% - 240px);
+    padding-left: 120px;
+  background-color: #fff;
+  z-index: 31;
+}
+.roster_header > div {
+  margin-right: 60px;
+  width: 200px;
+}
+.el-button {
+  width: 60px;
+}
+.timeExpired {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+li button {
+  padding: 0;
+  text-align: center;
+}
