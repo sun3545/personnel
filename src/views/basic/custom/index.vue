@@ -36,7 +36,7 @@
           <el-tag>{{ scope.row.city ? scope.row.districtStr : "" }}</el-tag>
         </template>
         <template slot="sex" slot-scope="scope">
-          <span>{{ scope.row.sex==0 ? "男" : scope.row.sex==1 ? "女": "" }}</span>
+          <span>{{ scope.row.sex==1 ? "男" : scope.row.sex==2 ? "女": "" }}</span>
         </template>
         <template slot-scope="scope" slot="menu">
           <el-button

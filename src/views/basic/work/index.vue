@@ -35,7 +35,7 @@
         <template slot="createBy" slot-scope="scope">{{
           scope.row.username
         }}</template>
-        <template slot="brandNameForm" slot-scope="scope"
+        <template slot="brandIdForm" slot-scope="scope"
           ><avue-select
             v-model="braa"
             placeholder="请选择内容"
@@ -45,8 +45,11 @@
             disabled
           ></avue-select
         ></template>
-        <template slot="brandName" slot-scope="scope">{{
+        <template slot="brandId" slot-scope="scope">{{
           scope.row.brandName
+        }}</template>
+        <template slot="companyId" slot-scope="scope">{{
+          scope.row.companyName
         }}</template>
         <template slot="workTimeIntervalForm" slot-scope="scope">
           <div style="display:flex;">
@@ -99,6 +102,7 @@ import {
 import { getObj as getShopObj } from "@/api/basic/clientshop";
 import { getObj as getBrandObj } from "@/api/basic/clientbrand";
 import { tableOption } from "@/const/crud/basic/clientwork";
+
 import { mapGetters } from "vuex";
 export default {
   name: "clientwork",
@@ -150,19 +154,7 @@ export default {
           });
         }
       }
-    },
-    // startTime: {
-    //   handler() {
-    //     for (let i = 0; i < this.endOptions.length; i++) {
-    //       const element = this.endOptions[i];
-    //       if (element.value == this.startTime) break;
-    //       this.endOptions[i] = {
-    //         ...element,
-    //         disabled: true
-    //       };
-    //     }
-    //   }
-    // }
+    }
   },
   methods: {
     getSelectTime() {
@@ -219,11 +211,16 @@ export default {
     },
     handleFilter(params, done) {
       console.log(123, params);
-      if (params.workDate) {
-        params.searchDate = params.workDate;
-        params.workDate = undefined;
+      if (params.workData) {
+        params.searchDate = params.workData;
+        params.workData = undefined;
       }
-      console.log(JSON.stringify(params));
+      params = {
+        ...params,
+        workDate: undefined,
+        searchDate: params.workDate
+      };
+      console.log(params);
       this.page.currentPage = 1;
       this.listQuery.current = 1;
       this.getList(params);

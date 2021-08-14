@@ -38,7 +38,7 @@ export const tableOption = {
   index: true,
   indexLabel: '序号',
   stripe: false,
-  menuAlign: 'center',
+//   menuAlign: 'center',
   align: 'center',
   searchMenuSpan: 6
 }

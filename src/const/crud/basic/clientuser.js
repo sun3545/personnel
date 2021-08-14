@@ -2,7 +2,7 @@ export const tableOption = {
   column: [
     {
       type: "input",
-      label: "姓名",
+      label: "昵称",
       prop: "name",
       search:true,
       display: true,
@@ -10,15 +10,15 @@ export const tableOption = {
       rules: [
         {
           required: true,
-          message: "姓名必须填写"
+          message: "昵称必须填写"
         }
       ]
     },
     {
       type: "input",
       label: "备注",
-      search:true,
       display: true,
+      overHidden:true,
       prop: "remark"
     },
     {
@@ -31,11 +31,11 @@ export const tableOption = {
       dicData: [
         {
           label: "男",
-          value: 0
+          value: 1
         },
         {
           label: "女",
-          value: 1
+          value: 2
         }
       ],
       cascaderItem: [],

@@ -8,7 +8,7 @@ export const shopColumn = {
         column: [{
                 label: "门店",
                 search: true,
-                searchSpan: 24,
+                searchSpan: 6,
                 prop: "shopName"
             },
             {
@@ -43,7 +43,7 @@ export const userColumn= {
                 label: "姓名",
                 prop: "name",
                 search: true,
-                searchSpan: 24
+                searchSpan: 6
             },
             {
                 label: "备注",

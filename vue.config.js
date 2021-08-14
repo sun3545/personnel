@@ -4,9 +4,9 @@
  *
  */
 // const url = 'http://180c75f6.nat123.cc:9999/'
-const url = 'http://122.112.230.80:9999/' //正式版
+// const url = 'http://122.112.230.80:9999/' //正式版
 
-// const url = 'http://192.168.101.27:9999/'    // 刘哥IP
+const url = 'http://192.168.101.27:9999/'    // 刘哥IP`
 // const url = 'http://admin.yinjixinxi.com'
 
 // 基础路径，发布前修改这里,当前配置打包出来的资源都是相对路径

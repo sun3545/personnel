@@ -42,7 +42,7 @@
       <el-button type="info" @click="handleExport($event)">导出</el-button>
     </header>
 
-    <main class="roster_main">
+    <main class="roster_main" v-show="works.length">
       <div class="roster_place"></div>
       <div class="main_top" :style="{ width: `${180 * works.length}px` }">
         <div class="fixed_w">门店</div>
@@ -87,23 +87,32 @@
                 v-for="(clientWork, clientIndex) in workItem.clientWorks"
                 :key="clientIndex"
               >
-                <p
-                  class="timeExpired"
-                  v-show="
-                    new Date().getDate() > index + 1 ||
-                      new Date().getMonth() + 1 > month ||
-                      !brandForm
-                  "
-                  @click="
-                    handleExpiredUser(
-                      '18px',
-                      true,
-                      clientWork.clientUsername,
-                      groupIndex,
-                      index
-                    )
-                  "
-                ></p>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="clientWork.clientUsername"
+                  placement="top"
+                  :disabled="clientWork.clientUsername.trim().length<7?true:false"
+                >
+                  <p
+                    class="timeExpired"
+                    ref="handleHoverTextShow"
+                    v-show="
+                      new Date().getDate() > index + 1 ||
+                        new Date().getMonth() + 1 > month ||
+                        !brandForm
+                    "
+                    @click="
+                      handleExpiredUser(
+                        clientWork,
+                        clientWork.clientUsername,
+                        groupIndex,
+                        index
+                      )
+                    "
+                  ></p>
+                </el-tooltip>
+
                 <button
                   :data-index="clientIndex"
                   @click.stop="
@@ -112,7 +121,7 @@
                 >
                   {{ clientWork.workTimeInterval }}
                 </button>
-                <button>
+                <button class="btnTextOver">
                   <!-- v-if="
                     new Date().getDate() - 1 < index + 1 &&
                       !clientWork.clientUsername
@@ -144,7 +153,7 @@
     <!-- 定义弹窗 开始时间，结束时间 实际工资等 -->
     <BulletFrame
       :style="{ bottom: timeBottom }"
-      @handleSubmitTime="handleTime('100%', false, $event)"
+      @handleSubmitTime="handleTime($event)"
       @isSelf="handleCancle('100%')"
       @handleCancle="handleCancle('100%')"
       @handleEndTime="endTime = $event"
@@ -177,6 +186,8 @@ export default {
   },
   data() {
     return {
+      // 溢出文字的父元素是否显示
+      isShowText: false,
       // 定义点击添加时，必要的数据
       myIdForm: {
         id: "",
@@ -190,8 +201,8 @@ export default {
         payCount: "",
         companyId: ""
       },
-      // 记录添加项的下标
-      worksIndex: 0,
+      // 记录过期后所点击对象
+      companyFormData: {},
       // 配置
       shopForm: "",
       shopSelectDic: [],
@@ -242,7 +253,8 @@ export default {
       subHtml: {},
       lastTime: 0,
       firstTime: 0,
-      isShopIdChange: false
+      isShopIdChange: false,
+      isCompanySelect: false
     };
   },
   created() {
@@ -309,24 +321,26 @@ export default {
         cityId: this.cascaderForm[1],
         provinceId: this.cascaderForm[0]
       }).then(res => {
-        console.log("res", res);
-        const oldName =
-          res
-            .getResponseHeader("content-disposition")
-            .split(";")[1]
-            .split("=")[1] || "";
-        let name = decodeURI(oldName);
-        console.log("name", name);
-        const iconv = require("iconv-lite");
-        iconv.skipDecodeWarning = true; //忽略警告
-        let name1 = iconv.decode(oldName, "utf-8");
-        console.log("fileName_", name1);
+        // console.log("res", res);
+        // const oldName =
+        //   res
+        //     .getResponseHeader("content-disposition")
+        //     .split(";")[1]
+        //     .split("=")[1] || "";
+        // let name = decodeURI(oldName);
+        // console.log("name", name);
+        // const iconv = require("iconv-lite");
+        // iconv.skipDecodeWarning = true; //忽略警告
+        // let name1 = iconv.decode(oldName, "utf-8");
+        // console.log("fileName_", name1);
 
         let blob = new Blob([res.data], {
           type: "application/octet-stream;charset=UTF-8"
         });
         // let blob = new Blob([res.data], { type: "application/vnd.ms-excel" });
-        let fileName = `资源${new Date().getTime()}.xls`;
+        const date = new Date();
+        let fileName = `排班计划表${date.getFullYear()}${date.getMonth() +
+          1}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}.xlsx`;
         downLoadFile(blob, fileName);
       });
 
@@ -373,24 +387,24 @@ export default {
     },
     // 点击外层元素去除弹幕 / 点击取消
     isSelf() {
+      if (this.isCompanySelect) return;
       this.timeBottom = "100%";
       this.isDetails = false;
       this.isShowTime = false;
     },
     // 子组件点击提交按钮
-    handleTime(position, isShow, e) {
-      this.timeBottom = position;
-      this.isShowTime = isShow;
-      this.isDetails = false;
+    handleTime(e) {
       this.subHtml = e;
       this.judgeAlter(e);
+      if (this.isCompanySelect) return;
+      this.timeBottom = "100%";
+      this.isShowTime = false;
+      this.isDetails = false;
     },
     judgeAlter(e) {
       // 拿取更改的数据
       let works = this.groups[this.storageIndex.index].dateGroups;
-      var subId = 0;
       // 判断更改的是：实际工作开始与结束时间 还是实际工作时长
-      console.log(this.time);
       if (e.time.startTime && e.time.endTime) {
         this.time.startTime = false;
         // 获取当前时间：年月日
@@ -423,35 +437,32 @@ export default {
         e.statistics.wage &&
         e.statistics.manHour
       ) {
-        works.forEach(item => {
-          item.clientWorks.forEach(clientItem => {
-            // console.log('ertdghkijkhjgfds',clientItem.workDate, works[0].date)
-            if (clientItem.workDate == works[0].date && clientItem.id) {
-              clientItem.clientUserId = this.userForm;
-              clientItem.brandId = this.brandForm;
-              // clientItem.shopId = this.shopForm?this.shopForm:this.myIdForm.shopId
-              clientItem.provinceId = this.cascaderForm[0];
-              clientItem.cityId = this.cascaderForm[1];
-              clientItem.companyId = e.statistics.companyForm;
-              clientItem.payCount = Number(e.statistics.wage);
-              clientItem.workCount = Number(e.statistics.manHour);
-              clientItem.workTimeInterval = `${e.time.startTime}-${e.time.endTime}`;
-              subId = clientItem.id;
-              // return false
-            }
-          });
-        });
-        // console.log("实际提交",subId,e.statistics)
         // 提交
         putObj({
           companyId: e.statistics.companyForm,
           workCount: e.statistics.manHour,
           payCount: e.statistics.wage,
-          id: subId
+          id: this.companyFormData.id
         }).then(res => {
-          // console.log(res)
+          this.$message.success("提交成功");
+          e.statistics.companyForm = "";
+          e.statistics.manHour = "";
+          e.statistics.wage = "";
         });
+      } else if (!e.statistics.manHour) {
+        this.$message.error("请填写实际工时");
+        this.isCompanySelect = true;
+        return;
+      } else if (!e.statistics.wage) {
+        this.$message.error("请填写实发工资");
+        this.isCompanySelect = true;
+        return;
+      } else if (!e.statistics.companyForm) {
+        this.$message.error("请填写实际付款公司");
+        this.isCompanySelect = true;
+        return;
       }
+      this.isCompanySelect = false;
     },
     // 开始与结束时间,提交后的处理
     handleUserTime(position, isShow, index, subIndex, event) {
@@ -471,20 +482,27 @@ export default {
       this.loadEmpty = "";
     },
     // 过期后的处理
-    handleExpiredUser(position, isShow, userName, index, subIndex) {
+    handleExpiredUser(item, userName, index, subIndex) {
       if (!this.brandForm) {
         this.$message.error("请先选择品牌");
         return;
       }
       if (!userName) return;
-      this.timeBottom = position;
+
+      this.timeBottom = "18px";
       this.isShowTime = false;
-      this.isDetails = isShow;
+      this.isDetails = true;
       // 更新下标
-      this.storageIndex = {
-        index,
-        subIndex
-      };
+      this.companyFormData = item;
+      //   console.log(item)
+      //   console.log("前", this.storageIndex)
+
+      //   this.storageIndex = {
+      //     index,
+      //     subIndex
+      //   };
+      //   console.log("后", this.storageIndex)
+
       // 发送请求: 实际付款公司的信息
       companyList().then(res => {
         this.companySelectDic = res.data.data;
@@ -492,6 +510,7 @@ export default {
     },
     // 点击取消
     handleCancle() {
+      this.isCompanySelect = false;
       this.timeBottom = "100%";
       this.isShowTime = false;
       this.isDetails = false;
@@ -570,7 +589,7 @@ export default {
       // console.log('fill', fill)
       // this.addIndex += inde
       // console.log("add",this.addIndex)
-      console.log("inde", inde);
+    //   console.log("inde", inde);
       const groupItemShopId = this.groups[inde].shopId;
       let newItemIndex = 0;
       for (let i = 0; i < this.groups.length; i++) {
@@ -579,7 +598,7 @@ export default {
           newItemIndex = i;
         }
       }
-      console.log(newItemIndex);
+    //   console.log(newItemIndex);
       this.groups.splice(newItemIndex + 1, 0, fill);
     },
 

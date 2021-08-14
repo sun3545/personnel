@@ -1,5 +1,6 @@
 <template>
   <div class="bullet_f_container" @click.self="handleBack()">
+      
     <div class="bullet_f_select" :style="getStyle">
       <div v-if="isShowTime">
         开始时间：<el-time-select
@@ -26,6 +27,7 @@
         </el-time-select>
       </div>
       <div v-if="isDetails" class="details">
+
         <form action="" method="post">
           <p>
             <label for="manHour">实际工时：</label>
@@ -53,10 +55,11 @@
             <label for="company">实际付款公司：</label>
             <avue-select
               v-model="statistics.companyForm"
-              placeholder="请选择内容"
+              placeholder="请选择付款公司"
               type="tree"
               :dic="companySelectDic"
               :props="companySelectProps"
+              :style="{ width: '215px' }"
             ></avue-select>
           </p>
         </form>
@@ -74,7 +77,7 @@
 
 <script>
 export default {
-  props: ["bottom", "isShowTime", "isDetails", "companySelectDic"],
+  props: ["bottom", "isShowTime", "isDetails", "companySelectDic","myIs"],
   data() {
     return {
       companySelectProps: {
@@ -118,15 +121,15 @@ export default {
         },
         statistics: this.statistics
       });
-      this.time = {
-        startTime: "",
-        endTime: ""
-      };
-      this.statistics = {
-        companyForm: "",
-        manHour: "",
-        wage: ""
-      };
+    //   this.time = {
+    //     startTime: "",
+    //     endTime: ""
+    //   };
+    //   this.statistics = {
+    //     companyForm: "",
+    //     manHour: "",
+    //     wage: ""
+    //   };
     },
     handleBack() {
       this.$emit("isSelf");

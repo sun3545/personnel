@@ -22,7 +22,8 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-.menual_main_header .avue-form__group {
+
+.showText .menual_main_header .avue-form__group {
   padding-top: 29px;
 }
 .menual_main_header .avue-form__menu--center {
@@ -42,9 +43,8 @@ export default {
   text-align: center !important;
 }
 
-.el-table__body tr.current-row>td{
-    background-color:rgba($color: #F56C6C, $alpha: .5)!important;
-
+.el-table__body tr.current-row > td {
+  background-color: rgba($color: #f56c6c, $alpha: 0.5) !important;
 }
 
 // .el-table__row{
@@ -52,7 +52,6 @@ export default {
 //    transform-style:normal !important;
 // }
 // .el-table--enable-row-transition .el-table__body td {
-//     transition: background-color 2.25s ease!important; 
+//     transition: background-color 2.25s ease!important;
 // }
-
 </style>

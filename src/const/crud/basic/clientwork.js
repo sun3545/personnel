@@ -23,7 +23,7 @@ export const tableOption = {
     {
       type: "tree",
       label: "品牌",
-      prop: "brandName",
+      prop: "brandId",
       search: true,
       display: true,
       addDisabled: true,
@@ -34,7 +34,7 @@ export const tableOption = {
         label: "name",
         value: "id"
       },
-      dicUrl: "/admin/common/listCity?pid=0"
+      dicUrl: "/admin/clientbrand/listAll"
     },
     {
       type: "table",
@@ -260,7 +260,7 @@ export const tableOption = {
         // addBtn: true,
         column: [
           {
-            label: "姓名",
+            label: "昵称",
             search: true,
             searchSpan: 8,
             prop: "name"
@@ -280,11 +280,11 @@ export const tableOption = {
             dicData: [
               {
                 label: "男",
-                value: 0
+                value: 1
               },
               {
                 label: "女",
-                value: 1
+                value: 2
               }
             ]
           },
@@ -415,7 +415,19 @@ export const tableOption = {
       showWordLimit: false,
       controls: true
     },
-
+    {
+        type: "tree",
+        label: "付款公司",
+        prop: "companyId",
+        display: true,
+        slot:true,
+        props: {
+            label: "cname",
+            value: "id",
+            desc: "caddr"
+          },
+        dicUrl:'/admin/basiccompany/list'
+      },
     {
       type: "table",
       label: "排工员工",
@@ -493,10 +505,10 @@ export const tableOption = {
           });
         }
         //分页查询信息
-        callback({
-          total: 0,
-          data: []
-        });
+        // callback({
+        //   total: 0,
+        //   data: []
+        // });
         // fetchList(Object.assign(data, page)).then(response => {
         //     callback({
         //       total: response.data.data.total,
